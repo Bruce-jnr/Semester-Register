@@ -1,0 +1,21 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const fs = require('fs');
+const app = express();
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.json());
+app.use(cookieParser());
+app.use('/api', (req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
+app.get('/api/health', (req, res) => res.json({ success: true, status: 'ok' }));
+for (const route of ['auth', 'students', 'rooms', 'fees']) app.use('/api/' + route, require('./routes/' + route));
+app.use('/api', (req, res) => res.status(404).json({ error: 'Endpoint not found' }));
+app.use('/images', express.static(path.join(__dirname, '..', 'public', 'images')));
+const dist = path.join(__dirname, '..', 'dist');
+if (fs.existsSync(dist)) { app.use(express.static(dist)); app.get('*', (req, res) => res.sendFile(path.join(dist, 'index.html'))); }
+app.use((error, req, res, next) => { console.error(error.message); res.status(500).json({ error: 'Server error' }); });
+const port = Number(process.env.PORT || 3000);
+if (port === 5173) throw new Error('Set PORT to a backend port other than 5173');
+app.listen(port, '127.0.0.1', () => console.log('API listening on http://localhost:' + port));
