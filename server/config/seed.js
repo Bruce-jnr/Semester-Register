@@ -1,29 +1,31 @@
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
-require('dotenv').config({ path: require('path').join(__dirname, '..', '..', '.env') });
+require('dotenv').config({
+  path: require('path').join(__dirname, '..', '..', '.env'),
+});
 
 // Create a connection without database first
 async function createDatabaseConnection() {
-  const dbHost = process.env.DB_HOST || 'localhost';
-  const dbUser = process.env.DB_USER || 'root';
-  const dbPassword = process.env.DB_PASSWORD || '';
-  const dbName = process.env.DB_NAME || 'student_registration_db';
-  
+  const dbHost = process.env.DB_HOST;
+  const dbUser = process.env.DB_USER;
+  const dbPassword = process.env.DB_PASSWORD;
+  const dbName = process.env.DB_NAME;
+
   console.log(`Connecting to MySQL as ${dbUser}@${dbHost}...`);
-  
+
   try {
     const connection = await mysql.createConnection({
       host: dbHost,
       user: dbUser,
-      password: dbPassword
+      password: dbPassword,
     });
-    
+
     // Create database if it doesn't exist
     await connection.execute(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
     await connection.end();
-    
+
     console.log(`Database ${dbName} created/verified successfully`);
-    
+
     // Now create pool with database
     const pool = mysql.createPool({
       host: dbHost,
@@ -32,14 +34,14 @@ async function createDatabaseConnection() {
       database: dbName,
       waitForConnections: true,
       connectionLimit: 10,
-      queueLimit: 0
+      queueLimit: 0,
     });
-    
+
     // Test the pool connection
     const testConnection = await pool.getConnection();
     testConnection.release();
     console.log('Database pool connected successfully');
-    
+
     return pool;
   } catch (error) {
     console.error('\n=== Database Connection Error ===');
@@ -127,21 +129,29 @@ async function seedAdmins() {
   if (!pool) {
     throw new Error('Database pool is not initialized');
   }
-  
+
   try {
     const admins = [
-      { username: 'malehost', password: 'password123', role: 'Male Host Awardee' },
-      { username: 'femalehost', password: 'password123', role: 'Female Host Awardee' },
+      {
+        username: 'malehost',
+        password: 'password123',
+        role: 'Male Host Awardee',
+      },
+      {
+        username: 'femalehost',
+        password: 'password123',
+        role: 'Female Host Awardee',
+      },
       { username: 'accountant', password: 'password123', role: 'Accountant' },
       { username: 'registra', password: 'password123', role: 'Registra' },
-      { username: 'matron', password: 'password123', role: 'Matron' }
+      { username: 'matron', password: 'password123', role: 'Matron' },
     ];
 
     for (const admin of admins) {
       const hashedPassword = await bcrypt.hash(admin.password, 10);
       await pool.execute(
         'INSERT IGNORE INTO admins (username, password, role) VALUES (?, ?, ?)',
-        [admin.username, hashedPassword, admin.role]
+        [admin.username, hashedPassword, admin.role],
       );
     }
 
@@ -150,7 +160,9 @@ async function seedAdmins() {
     console.log('- malehost / password123 (Male Host Awardee - View Only)');
     console.log('- femalehost / password123 (Female Host Awardee - View Only)');
     console.log('- accountant / password123 (Accountant - View Statistics)');
-    console.log('- registra / password123 (Registra - Full Access, Can Register Students)');
+    console.log(
+      '- registra / password123 (Registra - Full Access, Can Register Students)',
+    );
     console.log('- matron / password123 (Matron - View Students Only)');
   } catch (error) {
     console.error('Error seeding admins:', error.message);
@@ -162,7 +174,7 @@ async function seedRooms() {
   if (!pool) {
     throw new Error('Database pool is not initialized');
   }
-  
+
   try {
     const rooms = [
       { room_number: 'M101', gender_type: 'Male', capacity: 4 },
@@ -170,13 +182,13 @@ async function seedRooms() {
       { room_number: 'M103', gender_type: 'Male', capacity: 3 },
       { room_number: 'F101', gender_type: 'Female', capacity: 4 },
       { room_number: 'F102', gender_type: 'Female', capacity: 4 },
-      { room_number: 'F103', gender_type: 'Female', capacity: 3 }
+      { room_number: 'F103', gender_type: 'Female', capacity: 3 },
     ];
 
     for (const room of rooms) {
       await pool.execute(
         'INSERT IGNORE INTO rooms (room_number, gender_type, capacity, current_capacity) VALUES (?, ?, ?, ?)',
-        [room.room_number, room.gender_type, room.capacity, room.capacity]
+        [room.room_number, room.gender_type, room.capacity, room.capacity],
       );
     }
 
@@ -203,4 +215,3 @@ async function seed() {
 }
 
 seed();
-

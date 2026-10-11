@@ -9,13 +9,15 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "dev:api": "npm --prefix server run dev",
-    "start": "npm --prefix server start",
+    "start": "node startup.cjs",
     "seed": "npm --prefix server run seed",
     "dev:web": "vite",
     "migrate:accommodation": "node server/config/migrate-accommodation.js",
     "test:accommodation": "node --test server/tests/accommodation.test.cjs",
     "migrate:uniform-fee": "node server/config/migrate-uniform-fee.js",
-    "test:uniform-fee": "node --test server/tests/uniform-fee.test.cjs"
+    "test:uniform-fee": "node --test server/tests/uniform-fee.test.cjs",
+    "test:startup": "node --test server/tests/listen.test.cjs",
+    "install:server": "npm --prefix server install --omit=dev"
   },
   "dependencies": {
     "react": "^19.2.8",

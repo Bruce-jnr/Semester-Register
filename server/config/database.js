@@ -8,20 +8,20 @@ const dbConfig = {
   database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
 };
 
 const pool = mysql.createPool(dbConfig);
 
 // Test connection
-pool.getConnection()
-  .then(connection => {
+pool
+  .getConnection()
+  .then((connection) => {
     console.log('Connected to MySQL database');
     connection.release();
   })
-  .catch(err => {
+  .catch((err) => {
     console.error('Database connection error:', err.message);
   });
 
 module.exports = pool;
-

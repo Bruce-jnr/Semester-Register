@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const generateToken = (payload) => {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: '24h' });
@@ -16,6 +16,5 @@ const verifyToken = (token) => {
 
 module.exports = {
   generateToken,
-  verifyToken
+  verifyToken,
 };
-

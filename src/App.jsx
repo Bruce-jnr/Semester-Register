@@ -811,7 +811,7 @@ function Workspace({ user, onLogout }) {
             Registra<small>STUDENT SERVICES</small>
           </span>
         </a>
-        <p className="nav-label">WORKSPACE</p>
+        <p className="nav-label">MENU</p>
         <nav>
           {tabs.map((item) => (
             <button

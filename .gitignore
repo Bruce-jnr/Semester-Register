@@ -27,3 +27,5 @@ dist-ssr
 .env.*
 !.env.example
 server/node_modules/
+
+CPANEL.md

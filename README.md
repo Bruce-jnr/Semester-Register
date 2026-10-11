@@ -1,7 +1,7 @@
 # Registra
 
 React/Vite student services frontend with an Express/MySQL API.
-The nested Registration new folder is retained as the original reference.
+The original application has been migrated into the React frontend and Express API.
 
 ## Setup
 
@@ -55,3 +55,8 @@ The directory and Excel exports include the status. Run npm run test:uniform-fee
 
 Registrars can update a Level 100 uniform fee directly in Students using the Paid/Unpaid dropdown.
 The change saves immediately and appears in subsequent exports. Other roles can only view the status.
+
+## cPanel deployment
+
+Use startup.cjs in the project root as the startup file, with the cPanel application root set to your project directory.
+Express serves the built React frontend and API together. See [CPANEL.md](CPANEL.md) for deployment steps.
