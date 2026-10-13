@@ -141,6 +141,7 @@ function Students({ user, refresh, onChange }) {
         : '';
   const [filters, setFilters] = useState({
     gender: fixedGender,
+    room_number: '',
     level: '',
     search: '',
   });
@@ -151,6 +152,17 @@ function Students({ user, refresh, onChange }) {
   const [rooms, setRooms] = useState([]);
   const [roomId, setRoomId] = useState('');
   const [uniformUpdating, setUniformUpdating] = useState(null);
+  const showRoomFilter = user.role === 'Registra' || Boolean(fixedGender);
+  const [roomNumbers, setRoomNumbers] = useState([]);
+  const [roomFilterError, setRoomFilterError] = useState('');
+  useEffect(() => {
+    if (!showRoomFilter) return;
+    let active = true;
+    api('/students/room-numbers?' + new URLSearchParams({ gender: filters.gender }))
+      .then(data => { if (active) { setRoomNumbers(data.roomNumbers); setRoomFilterError(''); } })
+      .catch(error => { if (active) { setRoomNumbers([]); setRoomFilterError(error.message); } });
+    return () => { active = false; };
+  }, [showRoomFilter, filters.gender, refresh]);
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
   const query = new URLSearchParams({ ...filters, page, limit: 50 }).toString();
@@ -176,7 +188,7 @@ function Students({ user, refresh, onChange }) {
   }, [query, refresh]);
   function filter(name, value) {
     setLoading(true);
-    setFilters((previous) => ({ ...previous, [name]: value }));
+    setFilters((previous) => ({ ...previous, [name]: value, ...(name === 'gender' ? { room_number: '' } : {}) }));
     setPage(1);
   }
   async function choose(student) {
@@ -286,7 +298,12 @@ function Students({ user, refresh, onChange }) {
           value={filters.level}
           onChange={(e) => filter('level', e.target.value)}
         />
+        {showRoomFilter && <select aria-label="Filter by room" value={filters.room_number} onChange={event => filter('room_number', event.target.value)}>
+          <option value="">All rooms</option>
+          {roomNumbers.map(number => <option key={number} value={number}>{number}</option>)}
+        </select>}
       </div>
+      {roomFilterError && <p className="notice error" role="alert">Could not load room filters: {roomFilterError}</p>}
       {error && (
         <p className="notice error" role="alert">
           {error}

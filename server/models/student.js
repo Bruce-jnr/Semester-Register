@@ -21,7 +21,7 @@ class Student {
     return normalized;
   }
 
-  static async findAll(page = 1, limit = 50, gender = null, level = null, search = '') {
+  static async findAll(page = 1, limit = 50, gender = null, level = null, search = '', roomNumber = null) {
     const pageNum = parseInt(page, 10);
     const limitNum = parseInt(limit, 10);
     if (pageNum < 1 || limitNum < 1 || limitNum > 500) throw new Error('Invalid pagination');
@@ -45,6 +45,11 @@ class Student {
       params.push(level);
     }
     
+    if (roomNumber) {
+      whereClause += (whereClause ? ' AND ' : ' WHERE ') + 'r.room_number = ?';
+      params.push(roomNumber);
+    }
+
     if (search) {
       whereClause += (whereClause ? ' AND ' : ' WHERE ') + '(s.name LIKE ? OR s.index_number LIKE ? OR s.phone LIKE ?)';
       params.push('%' + search + '%', '%' + search + '%', '%' + search + '%');
@@ -55,7 +60,7 @@ class Student {
     const [rows] = await pool.execute(query, params);
     
     // Get count with same filters
-    const countQuery = `SELECT COUNT(*) as total FROM students s${whereClause}`;
+    const countQuery = `SELECT COUNT(*) as total FROM students s LEFT JOIN rooms r ON s.room_id = r.id${whereClause}`;
     const [countResult] = await pool.execute(countQuery, params);
     
     return {
@@ -157,7 +162,7 @@ class Student {
     );
   }
 
-  static async findAllForExport(gender = null, level = null, search = '') {
+  static async findAllForExport(gender = null, level = null, search = '', roomNumber = null) {
     // Build WHERE clause based on filters
     let whereClause = '';
     const params = [];
@@ -176,6 +181,11 @@ class Student {
       params.push(level);
     }
     
+    if (roomNumber) {
+      whereClause += (whereClause ? ' AND ' : ' WHERE ') + 'r.room_number = ?';
+      params.push(roomNumber);
+    }
+
     if (search) {
       whereClause += (whereClause ? ' AND ' : ' WHERE ') + '(s.name LIKE ? OR s.index_number LIKE ? OR s.phone LIKE ?)';
       params.push('%' + search + '%', '%' + search + '%', '%' + search + '%');

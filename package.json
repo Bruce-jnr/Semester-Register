@@ -17,7 +17,8 @@
     "migrate:uniform-fee": "node server/config/migrate-uniform-fee.js",
     "test:uniform-fee": "node --test server/tests/uniform-fee.test.cjs",
     "test:startup": "node --test server/tests/listen.test.cjs",
-    "install:server": "npm --prefix server install --omit=dev"
+    "install:server": "npm --prefix server install --omit=dev",
+    "test:room-filter": "node --test server/tests/room-filter.test.cjs"
   },
   "dependencies": {
     "react": "^19.2.8",

@@ -52,7 +52,7 @@ const getAllStudents = async (req, res) => {
     const limit = parseInt(req.query.limit) || 50;
     const gender = req.query.gender || null;
     const level = req.query.level || null;
-    const result = await Student.findAll(page, limit, gender, level, req.query.search || '');
+    const result = await Student.findAll(page, limit, gender, level, req.query.search || '', req.query.room_number || null);
     res.json({ success: true, students: result.students, pagination: {
       total: result.total,
       page: result.page,
@@ -177,7 +177,7 @@ const exportStudentsToExcel = async (req, res) => {
     const level = req.query.level || null;
     
     // Get all students with the same filters as getAllStudents
-    const students = await Student.findAllForExport(gender, level, req.query.search || '');
+    const students = await Student.findAllForExport(gender, level, req.query.search || '', req.query.room_number || null);
     
     // Prepare data for Excel
     const excelData = students.map(student => {
