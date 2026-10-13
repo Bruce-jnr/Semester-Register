@@ -49,7 +49,7 @@ const registerStudent = async (req, res) => {
 const getAllStudents = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 50;
+    const limit = parseInt(req.query.limit) || 10;
     const gender = req.query.gender || null;
     const level = req.query.level || null;
     const result = await Student.findAll(page, limit, gender, level, req.query.search || '', req.query.room_number || null);
@@ -101,7 +101,7 @@ const getStudentsByGender = async (req, res) => {
   try {
     const { gender } = req.params;
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 50;
+    const limit = parseInt(req.query.limit) || 10;
     const level = req.query.level || null;
     const roomNumber = req.query.room_number || null;
     const result = await Student.findByGender(gender, page, limit, level, roomNumber, req.query.search || '');

@@ -54,7 +54,7 @@ const getAllFees = async (req, res) => {
     const receiptIssued = req.query.receipt_issued || null;
     const paymentMethod = req.query.payment_method || null;
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 50;
+    const limit = parseInt(req.query.limit) || 10;
     const sortBy = req.query.sortBy || 'date_paid';
     const sortOrder = req.query.sortOrder || 'DESC';
     const result = await Fee.findAll(level, receiptIssued, paymentMethod, page, limit, sortBy, sortOrder, req.query.search || '');

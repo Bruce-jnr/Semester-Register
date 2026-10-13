@@ -165,7 +165,7 @@ function Students({ user, refresh, onChange }) {
   }, [showRoomFilter, filters.gender, refresh]);
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
-  const query = new URLSearchParams({ ...filters, page, limit: 50 }).toString();
+  const query = new URLSearchParams({ ...filters, page, limit: 10 }).toString();
   useEffect(() => {
     let active = true;
     api(`/students?${query}`)
@@ -572,7 +572,7 @@ function Fees({ user, refresh, onChange }) {
   const [page, setPage] = useState(1);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
-  const query = new URLSearchParams({ ...filters, page, limit: 50 }).toString();
+  const query = new URLSearchParams({ ...filters, page, limit: 10 }).toString();
   useEffect(() => {
     let active = true;
     api(`/fees?${query}`)

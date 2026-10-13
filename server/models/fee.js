@@ -12,7 +12,7 @@ class Fee {
     return result.insertId;
   }
 
-  static async findAll(level = null, receiptIssued = null, paymentMethod = null, page = 1, limit = 50, sortBy = 'date_paid', sortOrder = 'DESC', search = '') {
+  static async findAll(level = null, receiptIssued = null, paymentMethod = null, page = 1, limit = 10, sortBy = 'date_paid', sortOrder = 'DESC', search = '') {
     let whereClause = '';
     const params = [];
     
@@ -46,7 +46,7 @@ class Fee {
     }
     // Parse page and limit
     const pageNum = parseInt(page) || 1;
-    const limitNum = parseInt(limit) || 50;
+    const limitNum = parseInt(limit) || 10;
     const offset = (pageNum - 1) * limitNum;
     
     // Validate sortBy and sortOrder to prevent SQL injection

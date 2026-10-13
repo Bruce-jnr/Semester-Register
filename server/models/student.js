@@ -21,7 +21,7 @@ class Student {
     return normalized;
   }
 
-  static async findAll(page = 1, limit = 50, gender = null, level = null, search = '', roomNumber = null) {
+  static async findAll(page = 1, limit = 10, gender = null, level = null, search = '', roomNumber = null) {
     const pageNum = parseInt(page, 10);
     const limitNum = parseInt(limit, 10);
     if (pageNum < 1 || limitNum < 1 || limitNum > 500) throw new Error('Invalid pagination');
@@ -113,7 +113,7 @@ class Student {
     return rows[0];
   }
 
-  static async findByGender(gender, page = 1, limit = 50, level = null, roomNumber = null, search = '') {
+  static async findByGender(gender, page = 1, limit = 10, level = null, roomNumber = null, search = '') {
     const pageNum = parseInt(page, 10);
     const limitNum = parseInt(limit, 10);
     if (pageNum < 1 || limitNum < 1 || limitNum > 500) throw new Error('Invalid pagination');
